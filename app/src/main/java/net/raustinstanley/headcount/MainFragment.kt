@@ -59,6 +59,13 @@ class MainFragment : Fragment() {
             socket.emit("getheadcount")
         })
 
+        socket.on("update", { data ->
+            val count = data[0] as Int
+            runOnUiThread {
+                txtHeadcount.text = count.toString()
+            }
+        })
+
         socket.on("getuser", { data ->
             val json = data[0] as JSONObject
             runOnUiThread {
