@@ -6,17 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Switch
 import android.widget.TextView
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import org.jetbrains.anko.runOnUiThread
-import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URISyntaxException
 
@@ -25,7 +20,6 @@ class MainFragment : Fragment() {
     private lateinit var txtHeadcount: TextView
     private lateinit var switch: Switch
     private lateinit var spnName: Spinner
-    private lateinit var adapter: ArrayAdapter<JSONArray>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
