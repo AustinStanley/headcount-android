@@ -38,60 +38,64 @@ class MainFragment : Fragment() {
         txtHeadcount = view.findViewById(R.id.text_headcount)
         switch = view.findViewById(R.id.switch_rsvp)
 
-        //
-        // SOCKET LISTENERS
-        //
-
-        socket.on("getheadcount", { data ->
-            val count = data[0] as Int
-            runOnUiThread {
-                txtHeadcount.text = count.toString()
-            }
-        })
-
-        socket.on("rsvp", { _ ->
-            socket.emit("getheadcount")
-        })
-
-        socket.on("update", { data ->
-            val count = data[0] as Int
-            runOnUiThread {
-                txtHeadcount.text = count.toString()
-            }
-        })
-
-        socket.on("getuser", { data ->
-            val json = data[0] as JSONObject
-            runOnUiThread {
-                switch.isChecked = json.getBoolean("rsvp")
-            }
-        })
-
-        // Set initial state of RSVP switch
-        val nameJson = JSONObject()
-        nameJson.put("name", "Austin")
-        socket.emit("getuser", nameJson)
-
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            val json = JSONObject()
-            json.put("name", "Austin")
-            json.put("rsvp", isChecked)
-            socket.emit("rsvp", json)
-        }
+        initSocketListeners()
+        initRsvpSwitch()
+        initUiListeners()
 
         return view
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        socket.emit("getheadcount")
+        socket.emit(Constants.SocketEvents.GET_HEADCOUNT)
     }
 
     override fun onResume() {
         super.onResume()
 
-        socket.emit("getheadcount")
+        socket.emit(Constants.SocketEvents.GET_HEADCOUNT)
+    }
+
+    private fun initSocketListeners() {
+        socket.on(Constants.SocketEvents.GET_HEADCOUNT, { data ->
+            val count = data[0] as Int
+            runOnUiThread {
+                txtHeadcount.text = count.toString()
+            }
+        })
+
+        socket.on(Constants.SocketEvents.RSVP, { _ ->
+            socket.emit(Constants.SocketEvents.GET_HEADCOUNT)
+        })
+
+        socket.on(Constants.SocketEvents.UPDATE, { data ->
+            val count = data[0] as Int
+            runOnUiThread {
+                txtHeadcount.text = count.toString()
+            }
+        })
+
+        socket.on(Constants.SocketEvents.GET_USER, { data ->
+            val json = data[0] as JSONObject
+            runOnUiThread {
+                switch.isChecked = json.getBoolean("rsvp")
+            }
+        })
+    }
+
+    private fun initRsvpSwitch() {
+        val nameJson = JSONObject()
+        nameJson.put("name", "Austin")
+        socket.emit(Constants.SocketEvents.GET_USER, nameJson)
+    }
+
+    private fun initUiListeners() {
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            val json = JSONObject()
+            json.put("name", "Austin")
+            json.put("rsvp", isChecked)
+            socket.emit(Constants.SocketEvents.RSVP, json)
+        }
     }
 }
