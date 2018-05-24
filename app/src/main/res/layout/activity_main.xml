@@ -7,9 +7,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <fragment
-        android:id="@+id/fragment_main"
-        android:name="net.raustinstanley.headcount.MainFragment"
+    <FrameLayout
+        android:id="@+id/frame_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 </LinearLayout>

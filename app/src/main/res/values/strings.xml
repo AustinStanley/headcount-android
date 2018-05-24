@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Headcount</string>
     <string name="ping">Ping</string>
-    <string name="test">Test</string>
-    <string name="ping_count">Ping count: %1$d</string>
     <string name="date">Next Dinner: %1$s</string>
-    <string name="view_button">View RSVPs</string>
+    <string name="view_button">See Who\'s Coming</string>
+    <string name="user_button">Set User</string>
 </resources>

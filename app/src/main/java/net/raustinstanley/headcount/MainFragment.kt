@@ -6,33 +6,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Spinner
+import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
-import khronos.*
 import khronos.Dates.today
+import khronos.days
+import khronos.plus
+import khronos.toString
 import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
 import java.net.URISyntaxException
 
 class MainFragment : Fragment() {
-    private lateinit var socket: Socket
     private lateinit var txtHeadcount: TextView
     private lateinit var txtDate: TextView
     private lateinit var switch: Switch
-    private lateinit var spnName: Spinner
+    private lateinit var btnViewRsvp: Button
+    private lateinit var btnSetUser: Button
+    private lateinit var socket: Socket
+    private lateinit var activity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        try {
-            socket = IO.socket("${Constants.HOST}:${Constants.PORT}")
-            socket.connect()
-        } catch (e: URISyntaxException) {
-            Log.d("Socket", "socket error")
-        }
+        activity = getActivity() as MainActivity
+        socket = activity.socket
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -85,8 +84,9 @@ class MainFragment : Fragment() {
         txtHeadcount = view.findViewById(R.id.text_headcount)
         txtDate = view.findViewById(R.id.text_date)
         switch = view.findViewById(R.id.switch_rsvp)
+        btnViewRsvp = view.findViewById(R.id.button_view_rsvp)
 
-        var thisSunday = Dates.today
+        var thisSunday = today
         while (thisSunday.toString("EEE") != "Sun") {
             thisSunday += 1.days
         }
@@ -103,5 +103,15 @@ class MainFragment : Fragment() {
         val nameJson = JSONObject()
         nameJson.put("name", "Austin")
         socket.emit(Constants.SocketEvents.GET_USER, nameJson)
+
+        btnViewRsvp.setOnClickListener {
+            val rsvpFragment = RsvpFragment()
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_main, rsvpFragment)
+                    .addToBackStack("rsvp")
+                    .commit()
+
+        }
     }
+
 }
