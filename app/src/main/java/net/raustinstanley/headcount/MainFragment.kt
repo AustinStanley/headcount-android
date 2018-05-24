@@ -11,6 +11,8 @@ import android.widget.Switch
 import android.widget.TextView
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
+import khronos.*
+import khronos.Dates.today
 import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
 import java.net.URISyntaxException
@@ -18,6 +20,7 @@ import java.net.URISyntaxException
 class MainFragment : Fragment() {
     private lateinit var socket: Socket
     private lateinit var txtHeadcount: TextView
+    private lateinit var txtDate: TextView
     private lateinit var switch: Switch
     private lateinit var spnName: Spinner
 
@@ -34,14 +37,8 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         var view = inflater!!.inflate(R.layout.fragment_main, container, false)
-
-        txtHeadcount = view.findViewById(R.id.text_headcount)
-        switch = view.findViewById(R.id.switch_rsvp)
-
         initSocketListeners()
-        initRsvpSwitch()
-        initUiListeners()
-
+        initUI(view)
         return view
     }
 
@@ -84,18 +81,27 @@ class MainFragment : Fragment() {
         })
     }
 
-    private fun initRsvpSwitch() {
-        val nameJson = JSONObject()
-        nameJson.put("name", "Austin")
-        socket.emit(Constants.SocketEvents.GET_USER, nameJson)
-    }
+    private fun initUI(view: View) {
+        txtHeadcount = view.findViewById(R.id.text_headcount)
+        txtDate = view.findViewById(R.id.text_date)
+        switch = view.findViewById(R.id.switch_rsvp)
 
-    private fun initUiListeners() {
+        var thisSunday = Dates.today
+        while (thisSunday.toString("EEE") != "Sun") {
+            thisSunday += 1.days
+        }
+
+        txtDate.text = String.format(getString(R.string.date), thisSunday.toString("EEE, MMM d"))
+
         switch.setOnCheckedChangeListener { _, isChecked ->
             val json = JSONObject()
             json.put("name", "Austin")
             json.put("rsvp", isChecked)
             socket.emit(Constants.SocketEvents.RSVP, json)
         }
+
+        val nameJson = JSONObject()
+        nameJson.put("name", "Austin")
+        socket.emit(Constants.SocketEvents.GET_USER, nameJson)
     }
 }
