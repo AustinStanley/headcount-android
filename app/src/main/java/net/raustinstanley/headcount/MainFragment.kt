@@ -31,7 +31,7 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
         activity = getActivity() as MainActivity
         socket = activity.socket
-        prefs = activity.getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE)
+        prefs = activity.getSharedPreferences(Constants.Prefs.SHARED_PREFS, MODE_PRIVATE)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -95,13 +95,13 @@ class MainFragment : Fragment() {
 
         switch.setOnCheckedChangeListener { _, isChecked ->
             val json = JSONObject()
-            json.put("name", prefs.getString(Constants.PREFS_NAME, ""))
+            json.put("name", prefs.getString(Constants.Prefs.NAME, ""))
             json.put("rsvp", isChecked)
             socket.emit(Constants.SocketEvents.RSVP, json)
         }
 
         val nameJson = JSONObject()
-        nameJson.put("name", prefs.getString(Constants.PREFS_NAME, ""))
+        nameJson.put("name", prefs.getString(Constants.Prefs.NAME, ""))
         socket.emit(Constants.SocketEvents.GET_USER, nameJson)
 
         btnViewRsvp.setOnClickListener {

@@ -25,7 +25,7 @@ class RegisterFragment : Fragment() {
         super.onCreate(savedInstanceState)
         activity = getActivity() as MainActivity
         socket = activity.socket
-        prefs = activity.getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE)
+        prefs = activity.getSharedPreferences(Constants.Prefs.SHARED_PREFS, MODE_PRIVATE)
 
         socket.on(Constants.SocketEvents.REGISTER, { _ ->
             val mainFragment = MainFragment()
@@ -50,7 +50,7 @@ class RegisterFragment : Fragment() {
                     name.contains(' ') -> toast("First name only, please")
                     else ->  {
                         prefs.edit()
-                                .putString(Constants.PREFS_NAME, name.toString())
+                                .putString(Constants.Prefs.NAME, name.toString())
                                 .apply()
 
                         val json = JSONObject()
