@@ -1,5 +1,6 @@
 package net.raustinstanley.headcount
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -21,9 +22,21 @@ class MainActivity : AppCompatActivity() {
             Log.d("Socket", "socket error")
         }
 
-        val mainFragment = MainFragment()
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_main, mainFragment)
-                .commit()
+        val prefs = getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE)
+
+        when {
+            !prefs.contains(Constants.PREFS_NAME) -> {
+                val registerFragment = RegisterFragment()
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_main, registerFragment)
+                        .commit()
+            }
+            else -> {
+                val mainFragment = MainFragment()
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_main, mainFragment)
+                        .commit()
+            }
+        }
     }
 }

@@ -1,15 +1,15 @@
 package net.raustinstanley.headcount
 
 import android.app.Fragment
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
-import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
 import khronos.Dates.today
 import khronos.days
@@ -17,21 +17,21 @@ import khronos.plus
 import khronos.toString
 import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
-import java.net.URISyntaxException
 
 class MainFragment : Fragment() {
     private lateinit var txtHeadcount: TextView
     private lateinit var txtDate: TextView
     private lateinit var switch: Switch
     private lateinit var btnViewRsvp: Button
-    private lateinit var btnSetUser: Button
     private lateinit var socket: Socket
     private lateinit var activity: MainActivity
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = getActivity() as MainActivity
         socket = activity.socket
+        prefs = activity.getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -95,13 +95,13 @@ class MainFragment : Fragment() {
 
         switch.setOnCheckedChangeListener { _, isChecked ->
             val json = JSONObject()
-            json.put("name", "Austin")
+            json.put("name", prefs.getString(Constants.PREFS_NAME, ""))
             json.put("rsvp", isChecked)
             socket.emit(Constants.SocketEvents.RSVP, json)
         }
 
         val nameJson = JSONObject()
-        nameJson.put("name", "Austin")
+        nameJson.put("name", prefs.getString(Constants.PREFS_NAME, ""))
         socket.emit(Constants.SocketEvents.GET_USER, nameJson)
 
         btnViewRsvp.setOnClickListener {

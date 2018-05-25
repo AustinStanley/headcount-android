@@ -4,6 +4,8 @@ class Constants {
     companion object {
         const val HOST = "http://192.168.1.8"
         const val PORT = 8000
+        const val SHARED_PREFS = "prefs"
+        const val PREFS_NAME = "name"
     }
 
     class SocketEvents {
@@ -14,6 +16,7 @@ class Constants {
             const val UPDATE = "update"
             const val GET_USER = "getuser"
             const val GET_COMING="getcoming"
+            const val REGISTER = "register"
         }
     }
 }
