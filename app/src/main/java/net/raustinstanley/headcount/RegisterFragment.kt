@@ -43,19 +43,18 @@ class RegisterFragment : Fragment() {
 
         button.setOnClickListener {
             runOnUiThread {
-                val name = editName.text
-                val nameTrimmed = name.trim()
+                val name = editName.text.trim()
 
                 when {
-                    nameTrimmed.isBlank() -> toast("Enter your first name")
-                    nameTrimmed.contains(' ') -> toast("First name only, please")
+                    name.isBlank() -> toast("Enter your first name")
+                    name.contains(' ') -> toast("First name only, please")
                     else ->  {
                         prefs.edit()
-                                .putString(Constants.PREFS_NAME, nameTrimmed.toString())
+                                .putString(Constants.PREFS_NAME, name.toString())
                                 .apply()
 
                         val json = JSONObject()
-                        json.put("name", nameTrimmed.toString())
+                        json.put("name", name.toString())
                         socket.emit(Constants.SocketEvents.REGISTER, json)
                     }
                 }
